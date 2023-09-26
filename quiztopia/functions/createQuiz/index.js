@@ -7,14 +7,17 @@ const middy = require('@middy/core');
 //const httpJsonBodyParser = require('@middy/http-json-body-parser')
 //const validator = require('@middy/validator')
 //const { createQuizSchema } = require('../../middleware/schema')
-const validateSchema = require('../../middleware/schema');
+const {validateSchema} = require('../../middleware/schema');
 
-async function createQuiz(body) {
-
-
+async function createQuiz(body, context) {
+  //  console.log("här: " + userName)
+   // console.log("eller här: " + data.username)
+    //const userName = data.userName;
     const quizId = uuidv4();
+   
     const { quizName, questions } = body;
     try {
+     const location = "111.111.111.111"    
         const requiredFields = [
             'quizName',
             'questions'
@@ -36,10 +39,12 @@ async function createQuiz(body) {
                 quizId: quizId,
                 quizName: quizName,
                 questions: questions,
+                location: location,
+                createdBy: context.userName
             }
         }).promise();
 
-        return sendResponse(200, { success: true, quizId, quizName, questions });
+        return sendResponse(200, { success: true, quizId, quizName, questions, location, createdBy: context.userName });
 
     } catch (error) {
         console.log(error);
@@ -49,15 +54,16 @@ async function createQuiz(body) {
 
 const handler = middy()
     .use(validateToken)
-    .use(validateSchema())
+    .use(validateSchema)
     .handler(async (event, context) => {
         try {
-            return await createQuiz(JSON.parse(event.body));
+            return await createQuiz(JSON.parse(event.body), context);
         } catch (error) {
             console.log(error);
             return sendError(500, { success: false, message: "could not create quiz" });
         }
     }
+    
     );
 
 module.exports = { handler }

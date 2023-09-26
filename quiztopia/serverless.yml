@@ -8,6 +8,11 @@ provider:
   profile: HerrPablito
   iam:
     role: arn:aws:iam::724975227532:role/pabbe-role
+  deploymentMethod: direct
+  environment:
+    DYNAMODB_QUIZ_TABLE: quizDb
+    DYNAMODB_REGION: 'eu-north-1'    
+useDotenv: true
 
 plugins: 
   - serverless-webpack
@@ -20,12 +25,12 @@ custom:
     includeModules: true
 
 functions:
-  # getNotes:
-  #   handler: functions/getNotes/index.handler
-  #   events:
-  #     - httpApi:
-  #         path: '/api/notes'
-  #         method: GET
+  getAllQuiz:
+    handler: functions/getAllQuiz/index.handler
+    events:
+      - httpApi:
+          path: '/api/Quiz'
+          method: GET
   createQuiz:
     handler: functions/createQuiz/index.handler
     events:
@@ -38,12 +43,12 @@ functions:
   #     - httpApi:
   #         path: '/api/events/{noteId}'
   #         method: PUT
-  # deleteNote:
-  #   handler: functions/deleteNote/index.handler
-  #   events:
-  #     - httpApi:
-  #         path: '/api/events/{noteId}'
-  #         method: DELETE
+  deleteQuiz:
+    handler: functions/deleteQuiz/index.handler
+    events:
+      - httpApi:
+          path: '/api/events/{quizId}'
+          method: DELETE
   signup:
     handler: functions/signup/index.handler
     events:

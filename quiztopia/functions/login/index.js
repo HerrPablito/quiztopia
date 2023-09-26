@@ -32,8 +32,6 @@ async function login(user) {
 
 
 module.exports.handler = middy(async (event, context) => {
-    // console.log(event)
-    // console.log(context)
     try {
         return await login(JSON.parse(event.body));
     } catch (error) {

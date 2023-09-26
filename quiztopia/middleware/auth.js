@@ -4,7 +4,7 @@ const validateToken = {
     before: async (request) => {
         try {
             const token = request.event.headers.authorization.replace('Bearer ', '');
-            console.log(token);
+            //console.log(token);
             if (!token) {
                 return {
                     statusCode: 401,
@@ -16,9 +16,10 @@ const validateToken = {
             }
 
             const data = jwt.verify(token, "Nelson123");
-            request.event.userName = data.userName;
-            request.event.userId = data.userId;
-
+            
+            request.context.userName = data.userName;
+            request.context.userId = data.userId;
+            //console.log(data);
             return request.response;
 
         } catch (error) {

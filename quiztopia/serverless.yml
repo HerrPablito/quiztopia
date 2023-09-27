@@ -37,17 +37,17 @@ functions:
       - httpApi:
           path: '/api/createQuiz'
           method: POST
-  # updateNote:
-  #   handler: functions/updateNote/index.handler
-  #   events:
-  #     - httpApi:
-  #         path: '/api/events/{noteId}'
-  #         method: PUT
+  addQuestion:
+    handler: functions/addQuestion/index.handler
+    events:
+      - httpApi:
+          path: '/api/quiz/{quizId}'
+          method: PUT
   deleteQuiz:
     handler: functions/deleteQuiz/index.handler
     events:
       - httpApi:
-          path: '/api/events/{quizId}'
+          path: '/api/{quizId}'
           method: DELETE
   signup:
     handler: functions/signup/index.handler

@@ -17,7 +17,7 @@ async function createQuiz(body, context) {
    
     const { quizName, questions } = body;
     try {
-     const location = "111.111.111.111"    
+   
         const requiredFields = [
             'quizName',
             'questions'
@@ -39,12 +39,11 @@ async function createQuiz(body, context) {
                 quizId: quizId,
                 quizName: quizName,
                 questions: questions,
-                location: location,
                 createdBy: context.userName
             }
         }).promise();
 
-        return sendResponse(200, { success: true, quizId, quizName, questions, location, createdBy: context.userName });
+        return sendResponse(200, { success: true, quizId, quizName, questions, createdBy: context.userName });
 
     } catch (error) {
         console.log(error);

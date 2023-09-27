@@ -8,7 +8,8 @@ const validateSchema = {
                 questions: Joi.array().items(
                     Joi.object({
                         Q: Joi.string().required(),
-                        A: Joi.string().required()
+                        A: Joi.string().required(),
+                        location: Joi.string().required(),
                     })
                 ).required()
             });

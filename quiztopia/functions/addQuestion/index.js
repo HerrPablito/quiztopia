@@ -6,10 +6,8 @@ const { validateToken } = require('../../middleware/auth');
 async function addQandAToQuiz(params, body, context) {
     console.log(body);
     console.log(params);
-
-    const { Q, A } = body
+    const { Q, A, location } = body
     const quizId = params;
-
     const userName = context.userName;
     try {
         const { Item } = await db.get({
@@ -18,7 +16,8 @@ async function addQandAToQuiz(params, body, context) {
                 quizId: quizId
             }
         }).promise();
-
+        console.log(Item);
+        console.log(Item.createdBy);
         const createdBy = Item.createdBy;
         console.log("createdBy: " + createdBy);
 
@@ -36,7 +35,8 @@ async function addQandAToQuiz(params, body, context) {
         console.log('Quiz:', quiz)
         quiz.Item.questions.push({
             "Q": Q,
-            "A": A
+            "A": A,
+            "location": location
         });
 
         params = {
@@ -45,11 +45,7 @@ async function addQandAToQuiz(params, body, context) {
         };
 
         await db.put(params).promise();
-
-        return sendResponse(200, { success: true, message: "Question added" });
-        //const quiz = await db.get(params).promise();
-
-
+        return sendResponse(200, { success: true, message: "Question added" });     
     }
     catch (error) {
         console.log(error);
@@ -58,14 +54,10 @@ async function addQandAToQuiz(params, body, context) {
 
 }
 
-
-
 module.exports.handler = middy()
     .use(validateToken)
     .handler(async (event, context) => {
-        try {
-
-            
+        try {            
             return await addQandAToQuiz(event.pathParameters.quizId, JSON.parse(event.body), context);
 
         } catch (error) {

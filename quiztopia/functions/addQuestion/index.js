@@ -2,10 +2,9 @@ const { sendResponse, sendError } = require('../../responses/index')
 const { db } = require('../../services/db')
 const middy = require('@middy/core');
 const { validateToken } = require('../../middleware/auth');
-
+const { validateAddQuestionSchema } = require('../../middleware/schema');
 async function addQandAToQuiz(params, body, context) {
-    console.log(body);
-    console.log(params);
+
     const { Q, A, location } = body
     const quizId = params;
     const userName = context.userName;
@@ -16,10 +15,8 @@ async function addQandAToQuiz(params, body, context) {
                 quizId: quizId
             }
         }).promise();
-        console.log(Item);
-        console.log(Item.createdBy);
+
         const createdBy = Item.createdBy;
-        console.log("createdBy: " + createdBy);
 
         if (userName !== createdBy) {
             return sendError(403, { success: false, message: "You are not authorized to add question to this quiz" });
@@ -32,7 +29,6 @@ async function addQandAToQuiz(params, body, context) {
         };
 
         let quiz = await db.get(params).promise();
-        console.log('Quiz:', quiz)
         quiz.Item.questions.push({
             "Q": Q,
             "A": A,
@@ -56,6 +52,7 @@ async function addQandAToQuiz(params, body, context) {
 
 module.exports.handler = middy()
     .use(validateToken)
+   // .use(validateAddQuestionSchema)
     .handler(async (event, context) => {
         try {            
             return await addQandAToQuiz(event.pathParameters.quizId, JSON.parse(event.body), context);

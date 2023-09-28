@@ -1,8 +1,13 @@
 const Joi = require('joi');
 
-const validateSchema = {
-    before: async (request) => {
+const validateCreateQuizSchema = {
+    
+    after: async (request) => {
+        const parsedRequest = JSON.parse(request);
+        console.log(parsedRequest);
+        console.log("test");
         try {
+   
             const schema = Joi.object({
                 quizName: Joi.string().required(),
                 questions: Joi.array().items(
@@ -13,7 +18,14 @@ const validateSchema = {
                     })
                 ).required()
             });
-
+            
+            const result = schema.validate(parsedRequest);
+            
+            if (result.error){
+                console.log(result.error);
+                throw new Error("Wrong input");
+                
+            }
         } catch (error) {
             throw new Error('401 Unauthorized');
 
@@ -32,5 +44,8 @@ const validateSchema = {
     }
 
 }
-module.exports = { validateSchema };
+
+
+
+module.exports = { validateCreateQuizSchema };
 

@@ -1,26 +1,20 @@
 const { sendResponse, sendError } = require('../../responses/index')
 const { db } = require('../../services/db')
 const { v4: uuidv4 } = require('uuid');
-//const moment = require('moment');
 const { validateToken } = require('../../middleware/auth');
 const middy = require('@middy/core');
-//const httpJsonBodyParser = require('@middy/http-json-body-parser')
-//const validator = require('@middy/validator')
-//const { createQuizSchema } = require('../../middleware/schema')
-const {validateSchema} = require('../../middleware/schema');
+const {validateCreateQuizSchema} = require('../../middleware/schema');
 
 async function createQuiz(body, context) {
-  //  console.log("här: " + userName)
-   // console.log("eller här: " + data.username)
-    //const userName = data.userName;
+    
     const quizId = uuidv4();
    
     const { quizName, questions } = body;
     try {
-   
+
         const requiredFields = [
             'quizName',
-            'questions'
+            'questions',
         ];
 
         if (!body) {
@@ -52,8 +46,9 @@ async function createQuiz(body, context) {
 }
 
 const handler = middy()
+    //.use(validateToken)
+    .use(validateCreateQuizSchema)
     .use(validateToken)
-    .use(validateSchema)
     .handler(async (event, context) => {
         try {
             return await createQuiz(JSON.parse(event.body), context);

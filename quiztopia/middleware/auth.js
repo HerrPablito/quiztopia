@@ -4,7 +4,6 @@ const validateToken = {
     before: async (request) => {
         try {
             const token = request.event.headers.authorization.replace('Bearer ', '');
-            //console.log(token);
             if (!token) {
                 return {
                     statusCode: 401,
@@ -25,16 +24,17 @@ const validateToken = {
         } catch (error) {
             throw new Error('401 Unauthorized');
             
-            request.event.error = "401 Unauthorized";
-            return request.response;
+            // request.event.error = "401 Unauthorized";
+            // return request.response;
         }
     },
     onError: async (error) => {
-        return {
+
+         return {
             statusCode: 401,
             body: JSON.stringify({
                 success: false,
-                message: "Wrong token"
+                message: error.message
             })
         }
     }

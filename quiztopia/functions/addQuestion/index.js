@@ -2,7 +2,6 @@ const { sendResponse, sendError } = require('../../responses/index')
 const { db } = require('../../services/db')
 const middy = require('@middy/core');
 const { validateToken } = require('../../middleware/auth');
-const { validateAddQuestionSchema } = require('../../middleware/schema');
 async function addQandAToQuiz(params, body, context) {
 
     const { Q, A, location } = body
@@ -52,7 +51,7 @@ async function addQandAToQuiz(params, body, context) {
 
 module.exports.handler = middy()
     .use(validateToken)
-   // .use(validateAddQuestionSchema)
+   
     .handler(async (event, context) => {
         try {            
             return await addQandAToQuiz(event.pathParameters.quizId, JSON.parse(event.body), context);

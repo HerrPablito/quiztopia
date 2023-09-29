@@ -3,7 +3,7 @@ const { db } = require('../../services/db')
 const { v4: uuidv4 } = require('uuid');
 const { validateToken } = require('../../middleware/auth');
 const middy = require('@middy/core');
-const {validateCreateQuizSchema} = require('../../middleware/schema');
+const { validateSchema } = require('../../middleware/createQuiz.schema');
 
 async function createQuiz(body, context) {
     
@@ -46,9 +46,9 @@ async function createQuiz(body, context) {
 }
 
 const handler = middy()
-    //.use(validateToken)
-    .use(validateCreateQuizSchema)
     .use(validateToken)
+    .use(validateSchema)
+
     .handler(async (event, context) => {
         try {
             return await createQuiz(JSON.parse(event.body), context);
